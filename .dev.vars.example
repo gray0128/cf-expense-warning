@@ -1,0 +1,5 @@
+# 本地开发用变量（不要提交真实值到 git）
+CF_API_TOKEN=
+CF_ACCOUNT_ID=
+BARK_URL=https://barktest-cf.bobocai.win/REPLACE_WITH_YOUR_KEY
+MANUAL_KEY=local-test-key

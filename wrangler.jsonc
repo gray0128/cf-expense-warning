@@ -1,0 +1,40 @@
+{
+	// Worker 名称
+	"name": "cf-expense-warning",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-09-01",
+	// 检查频率可配置：改这里后重新 deploy 即可
+	// 默认每天 01:00 UTC (= 北京时间 09:00) 跑一次
+	// 每小时:  "0 * * * *"
+	// 每 6 小时: "0 */6 * * *"
+	"triggers": {
+		"crons": [
+			"0 1 * * *"
+		]
+	},
+	// KV: 存阈值告警去重标记 + 周期推送时间戳
+	// 先跑: npx wrangler kv namespace create STATE
+	// 把返回的 id 填到下面，再 deploy
+	"kv_namespaces": [
+		{
+			"binding": "STATE",
+			"id": "274324f7cf5f43b9b9ec0a63c17b59d4",
+			"remote": true
+		}
+	],
+	"vars": {
+		// 阈值金额可配置（美元，逗号分隔，升序与否均可）
+		"THRESHOLDS": "1,5,10",
+		// 周期推送频率可配置（小时）：24 = 每天推送一次账单
+		"REPORT_INTERVAL_HOURS": "24",
+		// 推送语言可配置：zh（缺省）/ en
+		"LANG": "zh",
+		// Bark 消息分组
+		"BARK_GROUP": "cf-expense"
+	}
+	// Secrets（不要写进文件，用命令设置）:
+	//   npx wrangler secret put CF_API_TOKEN     # 需带 Billing:Read 权限的 API Token
+	//   npx wrangler secret put CF_ACCOUNT_ID
+	//   npx wrangler secret put BARK_URL         # 形如 https://<bark-host>/<key>
+	//   npx wrangler secret put MANUAL_KEY       # 可选，手动触发 /trigger?key= 的口令
+}
